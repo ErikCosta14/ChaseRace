@@ -4,7 +4,7 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import javax.swing.ImageIcon;
 
-abstract class Competidor implements IComp{
+abstract class Competidor implements IComp, ILoading{
     protected Image imagem;
     protected int altura;
     protected int largura;

@@ -4,7 +4,7 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import javax.swing.ImageIcon;
 
-public class Colisao {
+public class Colisao implements ILoading{
     private Image imagem;
     public int alturaTela = 800;
     private int altura;
