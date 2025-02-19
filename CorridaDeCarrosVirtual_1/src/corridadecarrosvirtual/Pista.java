@@ -18,8 +18,6 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
@@ -80,6 +78,7 @@ public class Pista extends JPanel implements ActionListener{
                 maquina.load(maquina.carros[selCarro]);
             }
         }
+        contCol = 0;
         colisoes.clear();
         colisoesPista();
         
@@ -107,8 +106,8 @@ public class Pista extends JPanel implements ActionListener{
         this.btnReiniciar.setForeground(Color.white);
     }
     
-    public void colisoesPista(){
-        int numColisoes = gerarNum.nextInt(30,50);
+    private void colisoesPista(){
+        int numColisoes = gerarNum.nextInt(50,70);
         for(int i = 0; i < numColisoes; i++){
             int pos = gerarNum.nextInt(400,900);
             int vel = gerarNum.nextInt(30, 35);
@@ -144,7 +143,7 @@ public class Pista extends JPanel implements ActionListener{
             }
         }else {
             ImageIcon fimJogo = new ImageIcon("src\\img\\" + telaFim + ".png");
-            grafico.drawImage(fimJogo.getImage(), -270, -200, null);
+            grafico.drawImage(fimJogo.getImage(), -270, 0, null);
         }
          
         g.dispose();
@@ -158,11 +157,11 @@ public class Pista extends JPanel implements ActionListener{
         visibleCol();
         checarColisoes();
         
-        if(maquina.getY() > 700 || player.getX() < 370 || player.getX() > 970){
+        if(maquina.getY() > 850 || player.getX() < 390 || player.getX() > 950){
             telaFim = "Perdeu";
             jogando = false;
             timer.stop();
-            JOptionPane.showMessageDialog(this, "Para reiniciar o jogo, clique no botão a esquerda!");
+            JOptionPane.showMessageDialog(this, "Saiu da pista!\nPara reiniciar o jogo, clique no botão a esquerda!");
         }
         
         repaint();
@@ -172,7 +171,7 @@ public class Pista extends JPanel implements ActionListener{
         for(int i = 0; i < colisoes.size(); i++){
             Colisao cl = colisoes.get(i);
             ScheduledExecutorService tempo = Executors.newScheduledThreadPool(1);
-            tempo.schedule(() -> cl.update(), 2*i, TimeUnit.SECONDS);
+            tempo.schedule(() -> cl.update(), 2+i, TimeUnit.SECONDS);
             
             if (cl.getY() > cl.alturaTela){
                 colisoes.remove(i);
@@ -184,7 +183,7 @@ public class Pista extends JPanel implements ActionListener{
             telaFim = "Ganhou";
             jogando = false;
             timer.stop();
-            JOptionPane.showMessageDialog(this, "Para reiniciar o jogo, clique no botão a esquerda!");
+            JOptionPane.showMessageDialog(this, "Você desviou de todos os obstáculos!\nPara reiniciar o jogo, clique no botão a esquerda!");
         }
     }
     
@@ -198,16 +197,16 @@ public class Pista extends JPanel implements ActionListener{
             formaCol = colTemp.getBounds();
             
             if(formaCar.intersects(formaCol) || formaCom.intersects(formaCol)){
+                jogando = false;
                 if(formaCar.intersects(formaCol)){
                     telaFim = "Perdeu";
                     timer.stop();
-                    JOptionPane.showMessageDialog(this, "Para reiniciar o jogo, clique no botão a esquerda!");
+                    JOptionPane.showMessageDialog(this, "Você bateu em um obstáculo!\nPara reiniciar o jogo, clique no botão a esquerda!");
                 }else {
                     telaFim = "Ganhou";
                     timer.stop();
-                    JOptionPane.showMessageDialog(this, "Para reiniciar o jogo, clique no botão a esquerda!");
+                    JOptionPane.showMessageDialog(this, "Seu adversário bateu em um obstáculo!\nPara reiniciar o jogo, clique no botão a esquerda!");
                 }
-                jogando = false;
             }
         }
     }
@@ -223,6 +222,4 @@ public class Pista extends JPanel implements ActionListener{
             player.keyRelease(e);
         }
     }
-    
-    
 }

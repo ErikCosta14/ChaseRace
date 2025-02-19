@@ -38,6 +38,10 @@ public class Colisao {
         return x;
     }
 
+    public void setY(int y) {
+        this.y = y;
+    }
+
     public int getY() {
         return y;
     }

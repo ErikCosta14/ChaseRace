@@ -15,7 +15,7 @@ public class AudioUtil {
             clip.open(audioStream);
             clip.loop(Clip.LOOP_CONTINUOUSLY);
             FloatControl volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            volumeControl.setValue(-10.0f);
+            volumeControl.setValue(-20.0f);
             clip.start(); // Inicia o som
         } catch (Exception e) {
             throw new Exception("Áudio não suportado");// Caso ocorra um erro

@@ -6,7 +6,7 @@ public class Jogo extends JFrame{
     Pista pista = new Pista();
     public Jogo() {
         add(pista);
-        setTitle("F1");
+        setTitle("Chase Race");
         setSize(1920,1080);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);

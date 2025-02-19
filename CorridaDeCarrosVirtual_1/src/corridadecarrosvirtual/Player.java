@@ -7,16 +7,16 @@ public class Player extends Competidor{
         int codigo = tecla.getKeyCode();
         
         if(codigo == KeyEvent.VK_W){
-            dy = -20;
+            dy = -15;
         }
         if(codigo == KeyEvent.VK_A){
-            dx = -20;
+            dx = -15;
         }
         if(codigo == KeyEvent.VK_S){
             dy = 10;
         }
         if(codigo == KeyEvent.VK_D){
-            dx = 20;
+            dx = 15;
         }
     }
     
