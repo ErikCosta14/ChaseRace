@@ -4,6 +4,7 @@ import java.awt.event.KeyEvent;
 
 public class Player extends Competidor{
     public void keyPressed(KeyEvent tecla){
+        //lê a tecla que foi pressionada e manda quanto é o valor da direção de x ou y
         int codigo = tecla.getKeyCode();
         
         if(codigo == KeyEvent.VK_W){
@@ -21,6 +22,7 @@ public class Player extends Competidor{
     }
     
     public void keyRelease(KeyEvent tecla){
+        //lê que tecla foi solta para que o player não continue andando
         int codigo = tecla.getKeyCode();
         
         if(codigo == KeyEvent.VK_W){

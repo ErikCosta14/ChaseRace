@@ -3,11 +3,13 @@ package corridadecarrosvirtual;
 import javax.swing.JFrame;
 
 public class Jogo extends JFrame{
-    Pista pista = new Pista();
+    Pista pista = new Pista(); //criando uma nova pista para o jogo
+    
     public Jogo() {
+        //criando a tela que precisa ser criada
         add(pista);
         setTitle("Chase Race");
-        setSize(1920,1080);
+        setSize(1280,720);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         this.setResizable(false);
@@ -15,6 +17,6 @@ public class Jogo extends JFrame{
     }
     
     public static void main(String[] args){
-        new Jogo();
+        new Jogo(); //chamando a função do jogo para iniciar a partida
     }
 }

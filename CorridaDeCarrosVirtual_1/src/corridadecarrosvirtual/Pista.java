@@ -32,41 +32,45 @@ public class Pista extends JPanel implements ActionListener{
     private String telaFim;
     private boolean jogando;
     private Random gerarNum = new Random();
-    private ArrayList<Colisao> colisoes = new ArrayList<>();
+    private ArrayList<Colisao> colisoes = new ArrayList<>(); //lista de colisões
     private JButton btnReiniciar;
     
+    //classe construtura da pista
     public Pista(){
-        setFocusable(true);
+        setFocusable(true); //deixando a janela do jogo como foco
         setDoubleBuffered(true);
         
+        //adicionando a imagem de fundo na tela
         ImageIcon referencia = new ImageIcon("src\\img\\PistaPadrao.png");
         fundo = referencia.getImage();
         
+        //adicionando a música de fundo
         try {
             AudioUtil.tocarSom("src\\audio\\MusicaFundo.wav");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
         
+        //botão de reiniciar sendo adicionado
         btnReiniciar = new JButton("Reiniciar");
         btnReiniciar.addActionListener(e -> {
             resetGame();
         });
         
-        // Adicionar botão ao painel
         this.setLayout(new BorderLayout());
         this.add(btnReiniciar, BorderLayout.WEST);
-        btnReiStyle();
+        btnReiStyle(); //função para a configuração do botão
         
-        iniciarJogo();
+        iniciarJogo(); //iniciando o jogo
     }
     
-    public void iniciarJogo() {
+    private void iniciarJogo() {
+        //selecionando os carros aleatóriamente
         for(int i = 0; i < 2; i++) {
             selCarro = gerarNum.nextInt(0, 10);
             
             while(selCarro == numGerado){
-                selCarro = gerarNum.nextInt(0, 10);
+                selCarro = gerarNum.nextInt(0, 10); //caso os carros sejam iguais, será trocado até o carro ser diferente
             }
             
             if(i == 0){
@@ -78,28 +82,30 @@ public class Pista extends JPanel implements ActionListener{
                 maquina.load(maquina.carros[selCarro]);
             }
         }
-        contCol = 0;
-        colisoes.clear();
-        colisoesPista();
+        colisoesPista(); //chamando a função para gerar colisões na pista
         
-        addKeyListener(new TecladoAdapter());
+        addKeyListener(new TecladoAdapter()); //adicionando função para ler as teclas
         
-        timer = new Timer(16, this);
+        //iniciando o timer e o jogo oficialmente
+        timer = new Timer(16, this); //deixa o jogo a 60 frames
         timer.start();
         jogando = true;
     }
     
-    public void resetGame() {
+    private void resetGame() {
+        //resetando o game para as funções originais
         timer.stop();
         jogando = false;
         contCol = 0;
         
-        colisoes.clear();
+        colisoes.clear(); //limpando o array das colisões
         
+        //reiniciando o game
         iniciarJogo();
         requestFocusInWindow();
     }
     
+    // função para deixar o botão de reiniciar personalizado
     private void btnReiStyle(){
         this.btnReiniciar.setBackground(Color.red);
         this.btnReiniciar.setFocusPainted(false);
@@ -107,14 +113,18 @@ public class Pista extends JPanel implements ActionListener{
     }
     
     private void colisoesPista(){
-        int numColisoes = gerarNum.nextInt(50,70);
+        //gerando as colisões do jogo
+        int numColisoes = gerarNum.nextInt(50,70); //gera aleatoriamente de 70 a 50 colisões
+        
         for(int i = 0; i < numColisoes; i++){
-            int pos = gerarNum.nextInt(400,900);
-            int vel = gerarNum.nextInt(30, 35);
-
+            int pos = gerarNum.nextInt(400,900); //coloca as colisões nas posições aleatórias em x
+            int vel = gerarNum.nextInt(30, 35); // gera as colisões de velocidades em 30 a 35
+            
+            //gera cada colisão
             Colisao col = new Colisao(pos,vel);
             int nme = gerarNum.nextInt(1, 4);
             
+            //cada colisão pode ser uma de 3 opções
             if(nme == 1){
                 col.load("Barreira");
             }
@@ -124,15 +134,17 @@ public class Pista extends JPanel implements ActionListener{
             if(nme == 3){
                 col.load("PlacaPare");
             }
-            colisoes.add(col);
+            colisoes.add(col); //adiciona as colisões em no array de colis~ies
         }
     }
     
     @Override
     public void paint(Graphics g){
+        //gerando gráficos 2d
         Graphics2D grafico = (Graphics2D) g;
         
         if(jogando == true){
+            //enquanto tiver jogando gera os gráficos dos players e colisões
             grafico.drawImage(fundo, -270, 0, null);
             grafico.drawImage(player.getImagem(), player.getX(), player.getY(), this);
             grafico.drawImage(maquina.getImagem(), maquina.getX(), maquina.getY(), this);
@@ -142,6 +154,7 @@ public class Pista extends JPanel implements ActionListener{
                 grafico.drawImage(cl.getImagem(), cl.getX(), cl.getY(), this);
             }
         }else {
+            //caso o jogo acabe, aparece a tela de fim
             ImageIcon fimJogo = new ImageIcon("src\\img\\" + telaFim + ".png");
             grafico.drawImage(fimJogo.getImage(), -270, 0, null);
         }
@@ -150,35 +163,40 @@ public class Pista extends JPanel implements ActionListener{
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent e){
+        //movimentando os itens que tem que movimentar na tela
         player.update();
         maquina.update(player.getDx(), player.getDy()); 
         
-        visibleCol();
-        checarColisoes();
+        visibleCol(); //movimenta as colisões
+        checarColisoes(); //checa se o player ou o computador bateu nas colisões
         
-        if(maquina.getY() > 850 || player.getX() < 390 || player.getX() > 950){
+        //caso o player ou a maquina saia da pista o jogo acaba
+        if(maquina.getY() > 750 || player.getX() < 390 || player.getX() > 950){
             telaFim = "Perdeu";
             jogando = false;
             timer.stop();
             JOptionPane.showMessageDialog(this, "Saiu da pista!\nPara reiniciar o jogo, clique no botão a esquerda!");
         }
         
-        repaint();
+        repaint(); //atualiza a tela
     }
     
     private void visibleCol(){
+        //iniciando um contador que movimenta as colisões
+        ScheduledExecutorService tempo = Executors.newScheduledThreadPool(1);
         for(int i = 0; i < colisoes.size(); i++){
             Colisao cl = colisoes.get(i);
-            ScheduledExecutorService tempo = Executors.newScheduledThreadPool(1);
-            tempo.schedule(() -> cl.update(), 2+i, TimeUnit.SECONDS);
+            tempo.schedule(() -> cl.update(), 2+i, TimeUnit.SECONDS); // a cada 2+i segundos a colisão anda
             
+            //depois da altura definida da tela a colisão é removida do array
             if (cl.getY() > cl.alturaTela){
                 colisoes.remove(i);
                 contCol++;
             }
         }
         
+        //caso o player passe todos os obstaculos, ele vence a partida e o jogo para
         if(contCol > colisoes.size()){
             telaFim = "Ganhou";
             jogando = false;
@@ -188,6 +206,7 @@ public class Pista extends JPanel implements ActionListener{
     }
     
     public void checarColisoes(){
+        //criando uma hit-box para os itens
         Rectangle formaCar = player.getBounds();
         Rectangle formaCom = maquina.getBounds();
         Rectangle formaCol;
@@ -196,13 +215,14 @@ public class Pista extends JPanel implements ActionListener{
             Colisao colTemp = colisoes.get(i);
             formaCol = colTemp.getBounds();
             
+            //caso as hit-box se encontrem, o jogo termina, pois bateram
             if(formaCar.intersects(formaCol) || formaCom.intersects(formaCol)){
                 jogando = false;
-                if(formaCar.intersects(formaCol)){
+                if(formaCar.intersects(formaCol)){ //caso seja o player, perde
                     telaFim = "Perdeu";
                     timer.stop();
                     JOptionPane.showMessageDialog(this, "Você bateu em um obstáculo!\nPara reiniciar o jogo, clique no botão a esquerda!");
-                }else {
+                }else { //caso seja o computador, ganha
                     telaFim = "Ganhou";
                     timer.stop();
                     JOptionPane.showMessageDialog(this, "Seu adversário bateu em um obstáculo!\nPara reiniciar o jogo, clique no botão a esquerda!");
@@ -212,6 +232,7 @@ public class Pista extends JPanel implements ActionListener{
     }
     
     private class TecladoAdapter extends KeyAdapter{
+        //lendo o botão que pressiona e o botão que solta
         @Override
         public void keyPressed(KeyEvent e){
             player.keyPressed(e);

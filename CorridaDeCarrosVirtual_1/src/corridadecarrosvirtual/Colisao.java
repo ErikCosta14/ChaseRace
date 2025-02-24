@@ -14,12 +14,15 @@ public class Colisao implements ILoading{
     private int velocidade;
     
     public Colisao(int x, int v) {
+        //iniciando a colisão nas posiçõe se velocidades definidas
         this.x = x;  
         this.y = -100;
         this.velocidade = v;
     }
     
+    @Override
     public void load(String colisao) {
+        //carrega que imagem é que vai ser a colisão
         ImageIcon referencia = new ImageIcon("src\\img\\" + colisao + ".png");
         imagem = referencia.getImage();
         this.altura = imagem.getHeight(null);
@@ -27,10 +30,12 @@ public class Colisao implements ILoading{
     }
     
     public void update(){
+        //a colisão anda verticalmente
         y += velocidade;
     }
     
     public Rectangle getBounds(){
+        //retorna os lados do retangulo da imagem, que é usada para o hit-box
         return new Rectangle(x,y,largura,altura);
     }
 
