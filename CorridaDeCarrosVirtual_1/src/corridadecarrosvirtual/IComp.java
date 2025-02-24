@@ -1,6 +1,6 @@
 package corridadecarrosvirtual;
 
-abstract interface IComp { //interface para que todas as classes que tenham um update utilizem
+abstract interface IComp {
     abstract void update();
     abstract void update(int px, int py);
 }
